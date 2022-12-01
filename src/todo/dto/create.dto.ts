@@ -1,4 +1,4 @@
 export class CreateDto {
   title: string
-  isCompleted: boolean
+  isCompleted?: boolean
 }

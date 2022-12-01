@@ -7,7 +7,7 @@ import {
   Query,
   Body,
   Put,
-  NotFoundException, HttpException, HttpStatus
+  NotFoundException
 } from "@nestjs/common";
 import { CreateDto } from "./dto/create.dto";
 import { Todo } from "./entities/todo.entity";
@@ -30,15 +30,15 @@ export class TodoController {
     @Query('search') search: string
   ): Promise<Todo> {
     const todo = await this.todoService.findOne(id)
-    if (todo === undefined) {
-      throw new HttpException('Not found', HttpStatus.NOT_FOUND)
+    if (!todo) {
+      throw new NotFoundException('Not found')
     }
 
     return this.todoService.findOne(id);
   }
 
   @Post()
-  create(@Body() { title, isCompleted }: CreateDto): Promise<Todo> {
+  create(@Body() { title, isCompleted = false }: CreateDto): Promise<Todo> {
     const todo = new Todo()
     todo.title = title
     todo.isCompleted = isCompleted
@@ -51,7 +51,7 @@ export class TodoController {
     @Body() { title, isCompleted = false }: UpdateDto
   ): Promise<Todo | { error: string }> {
     const todo = await this.todoService.findOne(id)
-    if (todo === undefined) {
+    if (!todo) {
       throw new NotFoundException('Not found')
     }
     todo.title = title
@@ -60,7 +60,11 @@ export class TodoController {
   }
 
   @Delete(':id')
-  delete(@Param('id') id: number): Promise<void> {
-    return this.todoService.remove(id);
+  async delete(@Param('id') id: number): Promise<void> {
+    const todo = await this.todoService.findOne(id)
+    if (!todo) {
+      throw new NotFoundException('Not found')
+    }
+    await this.todoService.remove(id);
   }
 }
