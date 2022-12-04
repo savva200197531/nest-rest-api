@@ -14,7 +14,7 @@ import { Todo } from "./entities/todo.entity";
 import { UpdateDto } from "./dto/update.dto";
 import { TodoService } from "./todo.service";
 
-@Controller('todo')
+@Controller("todo")
 export class TodoController {
   constructor(private readonly todoService: TodoService) {
   }
@@ -24,14 +24,14 @@ export class TodoController {
     return this.todoService.findAll();
   }
 
-  @Get(':id')
+  @Get(":id")
   async getOne(
-    @Param('id') id: number,
-    @Query('search') search: string
+    @Param("id") id: number,
+    @Query("search") search: string
   ): Promise<Todo> {
-    const todo = await this.todoService.findOne(id)
+    const todo = await this.todoService.findOne(id);
     if (!todo) {
-      throw new NotFoundException('Not found')
+      throw new NotFoundException("Not found");
     }
 
     return this.todoService.findOne(id);
@@ -39,31 +39,31 @@ export class TodoController {
 
   @Post()
   create(@Body() { title, isCompleted = false }: CreateDto): Promise<Todo> {
-    const todo = new Todo()
-    todo.title = title
-    todo.isCompleted = isCompleted
-    return this.todoService.create(todo)
+    const todo = new Todo();
+    todo.title = title;
+    todo.isCompleted = isCompleted;
+    return this.todoService.create(todo);
   }
 
-  @Put(':id')
+  @Put(":id")
   async update(
-    @Param('id') id: number,
+    @Param("id") id: number,
     @Body() { title, isCompleted = false }: UpdateDto
   ): Promise<Todo | { error: string }> {
-    const todo = await this.todoService.findOne(id)
+    const todo = await this.todoService.findOne(id);
     if (!todo) {
-      throw new NotFoundException('Not found')
+      throw new NotFoundException("Not found");
     }
-    todo.title = title
-    todo.isCompleted = isCompleted
-    return this.todoService.update(todo)
+    todo.title = title;
+    todo.isCompleted = isCompleted;
+    return this.todoService.update(todo);
   }
 
-  @Delete(':id')
-  async delete(@Param('id') id: number): Promise<void> {
-    const todo = await this.todoService.findOne(id)
+  @Delete(":id")
+  async delete(@Param("id") id: number): Promise<void> {
+    const todo = await this.todoService.findOne(id);
     if (!todo) {
-      throw new NotFoundException('Not found')
+      throw new NotFoundException("Not found");
     }
     await this.todoService.remove(id);
   }

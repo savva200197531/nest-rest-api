@@ -3,20 +3,20 @@ import { CreateProductDto } from "./create-product.dto";
 
 @Injectable()
 export class ProductsService {
-  private products = []
+  private products = [];
 
   getAll() {
-    return this.products
+    return this.products;
   }
 
   getById(id: string) {
-    return this.products.find(p => p.id === id)
+    return this.products.find(p => p.id === id);
   }
 
   create(productDto: CreateProductDto) {
     this.products.push({
       ...productDto,
       id: Date.now().toString()
-    })
+    });
   }
 }
